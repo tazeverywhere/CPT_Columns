@@ -249,7 +249,7 @@ if ( !class_exists( 'CPT_columns' ) ) {
 		 * @return void
 		 */
 		function do_column( $post_id, $column, $column_name ) {
-			if ( in_array( $column[ 'type' ], array( 'text', 'thumb', 'post_meta', 'custom_tax' ) ) ) {
+			if ( in_array( $column[ 'type' ], array( 'text', 'thumb', 'post_meta', 'post_meta_date', 'custom_tax' ) ) ) {
 				echo $column[ 'prefix' ];
 			}
 			switch ( $column[ 'type' ] ) {
@@ -266,6 +266,12 @@ if ( !class_exists( 'CPT_columns' ) ) {
 				case 'post_meta':
 					$tmp = get_post_meta( $post_id, $column[ 'meta_key' ], true );
 					echo (!empty( $tmp )) ? $tmp : $column[ 'def' ];
+					break;
+				case 'post_meta_date':
+					$tmp = get_post_meta( $post_id, $column[ 'meta_key' ], true );
+					$date = strtotime($tmp);
+					$dateFormat = "d M Y";
+					echo (!empty( $tmp )) ? date_i18n($dateFormat, $date) : $column[ 'def' ];
 					break;
 				case 'author':
 					$author_id = get_post_field( 'post_author', $post_id );
@@ -294,7 +300,7 @@ if ( !class_exists( 'CPT_columns' ) ) {
 					}
 					break;
 			}//end switch
-			if ( in_array( $column[ 'type' ], array( 'text', 'thumb', 'post_meta', 'custom_tax' ) ) ) {
+			if ( in_array( $column[ 'type' ], array( 'text', 'thumb', 'post_meta', 'post_meta_date', 'custom_tax' ) ) ) {
 				echo $column[ 'suffix' ];
 			}
 		}
